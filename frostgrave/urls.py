@@ -2,12 +2,13 @@ from django.conf.urls import url
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from .views import GamesListView
+from .views import MainView, post
 
 
 
 urlpatterns = [
-    url(r'^$', GamesListView.as_view(), name='games_list'),
+    url(r'^$', MainView.as_view(), name='frostgrave_main'),
+    url(r'^post/$', post, name='mass_upload'),
 ]
 
 

@@ -3,7 +3,6 @@ from django.urls import reverse
 
 
 class TestUrls(TestCase):
-
-    def test_games(self):
-        url = reverse('games_list')
+    def test_main(self):
+        url = reverse('frostgrave_main')
         self.assertEqual(url, '/')
