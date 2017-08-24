@@ -1,3 +1,7 @@
+{% load static %}
+
+<img src="{% static "assets/images/logo.png" %}">
+
 <form action="{% url 'mass_upload' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <input type="file" name="file" />
@@ -30,4 +34,3 @@
         {% include "frostgrave/gear.html" with items=items %}    
     {% endif %}
 {% endif %}
-
