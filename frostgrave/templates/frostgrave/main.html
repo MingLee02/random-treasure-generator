@@ -1,36 +1,38 @@
+{% extends "core/base.html" %}
+
 {% load static %}
 
-<img src="{% static "assets/images/logo.png" %}">
 
-<form action="{% url 'mass_upload' %}" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <input type="file" name="file" />
-    <input type="submit" name="submit" value="Upload" />
-</form>
+{% block content %}
+    <form action="{% url 'mass_upload' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="file" />
+        <input type="submit" name="submit" value="Upload" />
+    </form>
 
 
-<form action="{% url 'random_treasure' %}" method="post">
-    {% csrf_token %}
-    <select name="num">
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
-        <option value="7">7</option>
-        <option value="8">8</option>
-        <option value="9">9</option>
-        <option value="10">10</option>
-    </select>
-    <input type="submit" name="submit" value="Random" />
-</form>
+    <form action="{% url 'random_treasure' %}" method="post">
+        {% csrf_token %}
+        <select name="num">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+        </select>
+        <input type="submit" name="submit" value="Random" />
+    </form>
 
-{% if table %}
-    You have found {{ table }}
-    {% if table == 'Spells' %}
-        {% include "frostgrave/spells.html" with items=items %}    
-    {% else %}
-        {% include "frostgrave/gear.html" with items=items %}    
+    {% if table %}
+        {% if table == 'Spells' %}
+            {% include "frostgrave/spells.html" %}    
+        {% else %}
+            {% include "frostgrave/gear.html" %}    
+        {% endif %}
     {% endif %}
-{% endif %}
+{% endblock %}
