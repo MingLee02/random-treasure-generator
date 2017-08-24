@@ -1,3 +1,4 @@
+from random import randint
 import xlrd
 from xlrd import open_workbook, cellname
 
@@ -81,7 +82,27 @@ def post(request):
     return render(request, 'frostgrave/main.html')
 
 
+def random(request):
+    random = randint(1, 4)
+
+    if random == 1:
+        table = 'Adventurers Gear'
+        items = AdventurersGear.objects.order_by('?')[:int(request._post['num'])]
+    elif random == 2:
+        table = 'Potions'
+        items = Potion.objects.order_by('?')[:int(request._post['num'])]
+    elif random == 3:
+        table = 'Spells'
+        items = Spell.objects.order_by('?')[:int(request._post['num'])]
+    elif random == 4:
+        table = 'Trinkets'
+        items = Trinket.objects.order_by('?')[:int(request._post['num'])]
+
+    return render(request, 'frostgrave/main.html', {
+        'items': items,
+        'table': table
+    })
+
+
 class MainView(TemplateView):
     template_name = 'frostgrave/main.html'
-
-
