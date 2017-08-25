@@ -8,7 +8,7 @@ from django.shortcuts import render
 from django.http import QueryDict
 from django.utils.datastructures import MultiValueDict
 
-from .models import AdventurersGear, Potion, Spell, Trinket
+from .models import AdventurersGear, Equipment, EquipmentType, Potion, Spell, Trinket
 
 @transaction.atomic
 def create_trinkets(values):
@@ -55,6 +55,32 @@ def create_spells(values):
             book_ammends=value[4]
         )
 
+@transaction.atomic
+def create_equipment(weights, values):
+    for value in values:
+        counter = 0
+        for item in value:
+            if counter == 0:
+                e_type = EquipmentType.objects.update_or_create(item_type=item)
+
+            Equipment.objects.update_or_create(
+                weight=weights[counter],
+                item_type=e_type[0],
+                item=item
+            )
+            counter = counter + 1
+
+def get_equipment(equip):
+    random = []
+    items = Equipment.objects.filter(item_type=equip)
+    for item in items:
+        for num in  range(0, int(float(item.weight))):
+            random.append(item)
+
+    length = len(random) + 1
+    rand = randint(0, length)
+    return random[rand]
+
 def post(request):
     if request.method == "POST":
         mdict = MultiValueDict(request._files)
@@ -65,25 +91,29 @@ def post(request):
 
             for name in wb.sheet_names():
                 sheet = wb.sheet_by_name(name)
-                keys = sheet.row_values(0)
 
-                # read the rest rows for values
-                values = [sheet.row_values(i) for i in range(1, sheet.nrows)]
+                if name == 'Weapons & Armour':
+                    values = [sheet.col_values(i) for i in range(1, sheet.ncols)]
+                    weight = sheet.col_values(0)
+                    create_equipment(weight, values)
+                else:
+                    # read the rest rows for values
+                    values = [sheet.row_values(i) for i in range(1, sheet.nrows)]
 
-                if name == 'Magical Trinkets':
-                    create_trinkets(values)
-                elif name == 'Potions':
-                    create_potions(values)
-                elif name == 'Adventurers Gear':
-                    create_gear(values)
-                elif name == 'Spells':
-                    create_spells(values)
+                    if name == 'Magical Trinkets':
+                        create_trinkets(values)
+                    elif name == 'Potions':
+                        create_potions(values)
+                    elif name == 'Adventurers Gear':
+                        create_gear(values)
+                    elif name == 'Spells':
+                        create_spells(values)
           
     return render(request, 'frostgrave/main.html')
 
 
 def random(request):
-    random = randint(1, 4)
+    random = randint(1, 5)
 
     if random == 1:
         table = 'Adventurers Gear'
@@ -97,6 +127,12 @@ def random(request):
     elif random == 4:
         table = 'Trinkets'
         items = Trinket.objects.order_by('?')[:int(request._post['num'])]
+    elif random == 5:
+        table = 'Weapons & Armour'
+        items = []
+        for num in  range(0, int(request._post['num'])):
+            equip = EquipmentType.objects.order_by('?')[:1].first()
+            items.append(get_equipment(equip))
 
     return render(request, 'frostgrave/main.html', {
         'items': items,

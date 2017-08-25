@@ -30,7 +30,14 @@
 
     {% if table %}
         {% if table == 'Spells' %}
-            {% include "frostgrave/spells.html" %}    
+            {% include "frostgrave/spells.html" %}
+        {% elif table == 'Weapons & Armour' %}
+            <h2>{{ table }}</h2>
+            <ul>
+                {% for item in items %}
+                    <li>{{ item }}</li>
+                {% endfor %}
+            </ul>
         {% else %}
             {% include "frostgrave/gear.html" %}    
         {% endif %}

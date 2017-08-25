@@ -45,3 +45,23 @@ class Spell(models.Model):
     def __str__(self):
         return self.name
 
+
+class EquipmentType(models.Model):
+    item_type = models.CharField(max_length=255)
+    
+    def __str__(self):
+        return self.item_type
+
+
+class Equipment(models.Model):
+    weight = models.CharField(max_length=255)
+    item_type = models.ForeignKey(
+        EquipmentType,
+        on_delete=models.CASCADE,
+        related_name="type",
+    )
+    item = models.CharField(max_length=255)
+    
+    def __str__(self):
+        return self.item
+
