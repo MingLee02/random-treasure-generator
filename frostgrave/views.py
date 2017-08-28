@@ -1,4 +1,4 @@
-from random import randint
+from random import randint, choice
 import xlrd
 from xlrd import open_workbook, cellname
 
@@ -77,9 +77,7 @@ def get_equipment(equip):
         for num in  range(0, int(float(item.weight))):
             random.append(item)
 
-    length = len(random) + 1
-    rand = randint(0, length)
-    return random[rand]
+    return choice(random)
 
 def post(request):
     if request.method == "POST":
@@ -130,7 +128,7 @@ def random(request):
     elif random == 5:
         table = 'Weapons & Armour'
         items = []
-        for num in  range(0, int(request._post['num'])):
+        for num in range(0, int(request._post['num'])):
             equip = EquipmentType.objects.order_by('?')[:1].first()
             items.append(get_equipment(equip))
 
