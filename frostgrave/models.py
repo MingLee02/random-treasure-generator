@@ -9,6 +9,9 @@ class Trinket(models.Model):
     school_magic = models.CharField(max_length=255, null=True, blank=True)
     cost =  models.CharField(max_length=255, null=True, blank=True)
 
+    class Meta:
+        ordering = ['name']
+
     def __str__(self):
         return self.name
 
@@ -19,6 +22,9 @@ class Potion(models.Model):
     effect_description = models.TextField(null=True, blank=True)
     uses = models.CharField(max_length=255, null=True, blank=True)
     cost =  models.CharField(max_length=255, null=True, blank=True)
+
+    class Meta:
+        ordering = ['name']
 
     def __str__(self):
         return self.name
@@ -31,6 +37,9 @@ class AdventurersGear(models.Model):
     uses = models.CharField(max_length=255, null=True, blank=True)
     cost =  models.CharField(max_length=255, null=True, blank=True)
 
+    class Meta:
+        ordering = ['name']
+
     def __str__(self):
         return self.name
 
@@ -41,6 +50,9 @@ class Spell(models.Model):
     cost = models.CharField(max_length=255, null=True, blank=True)
     target = models.CharField(max_length=255, null=True, blank=True)
     book_ammends = models.TextField(null=True, blank=True)
+
+    class Meta:
+        ordering = ['name']
 
     def __str__(self):
         return self.name
@@ -62,6 +74,9 @@ class Equipment(models.Model):
     )
     item = models.CharField(max_length=255)
     
+    class Meta:
+        ordering = ['item']
+
     def __str__(self):
         return self.item
 

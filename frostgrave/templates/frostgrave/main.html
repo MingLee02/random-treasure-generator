@@ -32,7 +32,7 @@
         {% if table %}
             <h2 class="table-header">{{ table }}</h2>
             {% if table == 'Spells' %}
-                {% include "frostgrave/spells.html" %}
+                {% include "frostgrave/tables/spells.html" %}
             {% elif table == 'Weapons & Armour' %}
                 <ul class="list-group">
                     {% for item in items %}
@@ -40,7 +40,7 @@
                     {% endfor %}
                 </ul>
             {% else %}
-                {% include "frostgrave/gear.html" %}    
+                {% include "frostgrave/tables/gear.html" %}
             {% endif %}
         {% endif %}
     </div>

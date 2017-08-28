@@ -1,4 +1,4 @@
-.table-type {
+.table-type, h1 {
 	text-align: center;
 }
 
@@ -103,5 +103,17 @@ table tr:hover td {
 
 .table-header {
    text-align: center;
+}
 
+.previous, .next {
+	font-size: 65px
+}
+
+.next {
+	float: right;
+}
+
+.pagination-wrapper {
+	width: 50%;
+    margin: auto;
 }
