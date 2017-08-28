@@ -7,13 +7,13 @@
     <form action="{% url 'mass_upload' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="file" name="file" />
-        <input type="submit" name="submit" value="Upload" />
+        <input type="submit" name="submit" value="Upload" class="btn btn-primary" />
     </form>
 
 
     <form action="{% url 'random_treasure' %}" method="post">
         {% csrf_token %}
-        <select name="num">
+        <select name="num" class="custom-select">
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
@@ -25,21 +25,23 @@
             <option value="9">9</option>
             <option value="10">10</option>
         </select>
-        <input type="submit" name="submit" value="Random" />
+        <input type="submit" name="submit" value="Random" class="btn btn-primary" />
     </form>
 
-    {% if table %}
-        {% if table == 'Spells' %}
-            {% include "frostgrave/spells.html" %}
-        {% elif table == 'Weapons & Armour' %}
-            <h2>{{ table }}</h2>
-            <ul>
-                {% for item in items %}
-                    <li>{{ item }}</li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            {% include "frostgrave/gear.html" %}    
+    <div class='treasure-wrapper'>
+        {% if table %}
+            <h2 class="table-header">{{ table }}</h2>
+            {% if table == 'Spells' %}
+                {% include "frostgrave/spells.html" %}
+            {% elif table == 'Weapons & Armour' %}
+                <ul class="list-group">
+                    {% for item in items %}
+                        <li class="list-group-item">{{ item }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                {% include "frostgrave/gear.html" %}    
+            {% endif %}
         {% endif %}
-    {% endif %}
+    </div>
 {% endblock %}
