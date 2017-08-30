@@ -10,7 +10,12 @@
     </head>
     <body>
     	<img src="{% static "assets/images/logo.png" %}" class="img-fluid">
-        <a href="{% url 'frostgrave_trinkets' %}">Trinkets</a>
+        <a href="{% url 'frostgrave_main' %}">Home</a>
+        <a href="{% url 'items' item='trinkets' %}">Trinkets</a>
+        <a href="{% url 'items' item='potions' %}">Potions</a>
+        <a href="{% url 'items' item='adventurers-gear' %}">Adventurers Gear</a>
+        <a href="{% url 'items' item='spells' %}">Spells</a>
+        <a href="{% url 'items' item='equipment' %}">Equipment</a>
         {% block content %}{% endblock content %}
     </body>
 </html>

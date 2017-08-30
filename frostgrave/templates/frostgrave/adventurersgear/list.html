@@ -1,0 +1,10 @@
+{% extends "core/base.html" %}
+
+{% load static %}
+
+
+{% block content %}
+    <h1>Adventurers Gear</h1>
+    <a href="{% url 'create_item' item_create='adventurers-gear' %}">Add Adventurers Gear</a>
+    {% include "frostgrave/tables/spells.html" with items=object_list item_detail='spells' %} 
+{% endblock %}

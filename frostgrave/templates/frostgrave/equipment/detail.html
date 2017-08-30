@@ -1,0 +1,16 @@
+{% extends "core/base.html" %}
+
+{% load static %}
+
+{% block content %}
+    <h1>{{ object.item }}</h1>
+    
+    <a href="{% url 'edit_item' item_edit='equipment' pk=object.pk %}">Update</a>
+    <a href="{% url 'delete_item' item_delete='equipment' pk=object.pk %}">Delete</a>
+    <div class='treasure-wrapper'>
+        <ul class="list-group">
+            <li class="list-group-item">Weight: {{ object.weight }}</li>
+            <li class="list-group-item">Type: {{ object.item_type }}</li>
+        </ul>
+    </div>
+{% endblock %}

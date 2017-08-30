@@ -6,8 +6,10 @@
 {% block content %}
     <h1>Update {{ object }}</h1>
     <form action="" method="post">{% csrf_token %}
-	    {{ form.as_p }}
-	    <a href="{% url 'frostgrave_trinket' pk=object.pk %}">Cancel</a>
-	    <input type="submit" value="Update" />
-	</form>
+        {{ form.as_p }}
+        {% with item_detail=items %} 
+            <a href="{% url 'item' item_detail=item_detail pk=object.pk %}">Cancel</a>
+        {% endwith %} 
+        <input type="submit" value="Update" />
+    </form>
 {% endblock %}

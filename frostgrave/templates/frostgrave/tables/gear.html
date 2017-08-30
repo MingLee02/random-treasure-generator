@@ -16,7 +16,7 @@
             <td>{{ item.name }}</td>
             <td>{{ item.effect_description }}</td>
             <td>{{ item.uses }}</td>
-            <td><a href="{% url 'frostgrave_trinket' pk=item.pk %}">Details</a></td>
+            <td><a href="{% url 'item' item_detail=item_detail pk=item.pk %}">Details</a></td>
         </tr>
     {% endfor %}
 </table>

@@ -1,0 +1,10 @@
+{% extends "core/base.html" %}
+
+{% load static %}
+
+
+{% block content %}
+    <h1>Trinkets</h1>
+    <a href="{% url 'create_item' item_create='trinkets' %}">Add Trinket</a>
+    {% include "frostgrave/tables/gear.html" with items=object_list item_detail='trinkets' %} 
+{% endblock %}

@@ -3,7 +3,7 @@ import xlrd
 from xlrd import open_workbook, cellname
 
 from django.db import transaction
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, ListView, DetailView, UpdateView, DeleteView, CreateView
 from django.shortcuts import render
 from django.http import QueryDict
 from django.urls import reverse
@@ -142,3 +142,121 @@ def random(request):
 
 class MainView(TemplateView):
     template_name = 'frostgrave/main.html'
+
+item_dict = [
+    {
+        'name': 'trinkets',
+        'model': Trinket,
+        'list-template': 'frostgrave/trinket/list.html',
+        'template': 'frostgrave/trinket/detail.html'
+    },
+    {   
+        'name': 'potions',
+        'model': Potion,
+        'list-template': 'frostgrave/potion/list.html',
+        'template': 'frostgrave/potion/detail.html'
+    },
+    {   
+        'name': 'adventurers-gear',
+        'model': AdventurersGear,
+        'list-template': 'frostgrave/adventurersgear/list.html',
+        'template': 'frostgrave/adventurersgear/detail.html'
+    },
+    {   
+        'name': 'spells',
+        'model': Spell,
+        'list-template': 'frostgrave/spell/list.html',
+        'template': 'frostgrave/spell/detail.html'
+    },
+    {   
+        'name': 'equipment',
+        'model': Equipment,
+        'list-template': 'frostgrave/equipment/list.html',
+        'template': 'frostgrave/equipment/detail.html'
+    },
+]
+
+class ItemListView(ListView):
+    paginate_by = 10
+    
+    def get_item(self):
+        return [x for x in item_dict if x['name'] == self.kwargs['item']]
+
+    def get_queryset(self):
+        return self.get_item()[0]['model'].objects.all()
+
+    def get_template_names(self):
+        return self.get_item()[0]['list-template']
+
+
+class ItemView(DetailView):
+    def get_item(self):
+        return [x for x in item_dict if x['name'] == self.kwargs['item_detail']]
+
+    def get_queryset(self):
+        return self.get_item()[0]['model'].objects.all()
+
+    def get_template_names(self):
+        return self.get_item()[0]['template']
+
+
+class UpdateItemView(UpdateView):
+    template_name = 'frostgrave/crud/update.html'
+    fields = '__all__'
+
+    def get_item(self):
+        return [x for x in item_dict if x['name'] == self.kwargs['item_edit']]
+
+    def get_queryset(self):
+        return self.get_item()[0]['model'].objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super(UpdateItemView, self).get_context_data(**kwargs)
+        context['items'] = self.get_item()[0]['name']
+        return context
+
+    def get_success_url(self):
+        return reverse('item', kwargs={
+            'item_detail': self.get_item()[0]['name'],
+            'pk': self.object.pk
+        })
+
+
+class DeleteItemView(DeleteView):
+    template_name = 'frostgrave/crud/delete.html'
+
+    def get_item(self):
+        return [x for x in item_dict if x['name'] == self.kwargs['item_delete']]
+
+    def get_queryset(self):
+        return self.get_item()[0]['model'].objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super(DeleteItemView, self).get_context_data(**kwargs)
+        context['items'] = self.get_item()[0]['name']
+        return context
+
+    def get_success_url(self):
+        return reverse('items', kwargs={'item': self.get_item()[0]['name']})
+
+
+class CreateItemView(CreateView):
+    template_name = 'frostgrave/crud/create.html'
+    fields = '__all__'
+
+    def get_item(self):
+        return [x for x in item_dict if x['name'] == self.kwargs['item_create']]
+
+    def get_queryset(self):
+        return self.get_item()[0]['model'].objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super(CreateItemView, self).get_context_data(**kwargs)
+        context['items'] = self.get_item()[0]['name']
+        return context
+
+    def get_success_url(self):
+        return reverse('item', kwargs={
+            'item_detail': self.get_item()[0]['name'],
+            'pk': self.object.pk
+        })

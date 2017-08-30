@@ -1,0 +1,30 @@
+{% extends "core/base.html" %}
+
+{% load static %}
+
+
+{% block content %}
+    <h1>Equipment</h1>
+    <a href="{% url 'create_item' item_create='equipment' %}">Add Equipment</a>
+    <ul class="list-group">
+        {% for item in object_list %}
+            <li class="list-group-item">
+                {{ item }}
+                <a href="{% url 'item' item_detail='equipment' pk=item.pk %}">Details</a></td>
+            </li>
+        {% endfor %}
+    </ul>
+    <div class="pagination-wrapper">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}" class="previous">&laquo;</a>
+        {% else %}
+            <a class="disabled previous"><span>&laquo;</span></a>
+        {% endif %}
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="next">&raquo;</a>
+        {% else %}
+            <a class="disabled next"><span>&raquo;</span></a>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -7,7 +7,9 @@
     <h1>Delete {{ object }}</h1>
     <form action="" method="post">{% csrf_token %}
 	    <p>Are you sure you want to delete "{{ object }}"?</p>
-	    <a href="{% url 'frostgrave_trinket' pk=object.pk %}">Cancel</a>
+	    {% with item_detail=items %} 
+	   		<a href="{% url 'item' item_detail=item_detail pk=object.pk %}">Cancel</a>
+	   	{% endwith %}
 	    <input type="submit" value="Confirm" />
 	</form>
 {% endblock %}
