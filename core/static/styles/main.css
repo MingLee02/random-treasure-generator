@@ -117,3 +117,12 @@ table tr:hover td {
 	width: 50%;
     margin: auto;
 }
+
+.navbar {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+li {
+	margin-left: 20px;
+}
