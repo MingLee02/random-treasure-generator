@@ -11,6 +11,7 @@
         </th>
         {% if item_detail %}
             <th></th>
+            <th></th>
         {% endif %}
     </tr>
     {% for item in items %}
@@ -20,6 +21,7 @@
             <td>{{ item.target }}</td>
             {% if item_detail %}
                 <td><a href="{% url 'item' item_detail=item_detail pk=item.pk %}">Details</a></td>
+                <td><a href="{% url 'delete_item' item_delete=item_detail pk=item.pk %}">Delete</a></td>
             {% endif %}
         </tr>
     {% endfor %}
