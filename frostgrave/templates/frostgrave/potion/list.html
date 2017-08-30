@@ -5,6 +5,8 @@
 
 {% block content %}
     <h1>Potions</h1>
-    <a href="{% url 'create_item' item_create='potions' %}">Add Potion</a>
+    <div class="crud-wrapper">
+    	<a href="{% url 'create_item' item_create='potions' %}">Add Potion</a>
+    </div>
     {% include "frostgrave/tables/gear.html" with items=object_list item_detail='potions' %} 
 {% endblock %}

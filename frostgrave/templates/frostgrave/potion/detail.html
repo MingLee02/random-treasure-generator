@@ -4,9 +4,10 @@
 
 {% block content %}
     <h1>{{ object.name }}</h1>
-    
-    <a href="{% url 'edit_item' item_edit='potions' pk=object.pk %}">Update</a>
-    <a href="{% url 'delete_item' item_delete='potions' pk=object.pk %}">Delete</a>
+    <div class="crud-wrapper">
+        <a href="{% url 'edit_item' item_edit='potions' pk=object.pk %}">Update</a>
+        <a href="{% url 'delete_item' item_delete='potions' pk=object.pk %}">Delete</a>
+    </div>
     <div class='treasure-wrapper'>
         <ul class="list-group">
             <li class="list-group-item">Visual Description: {{ object.visual_description }}</li>

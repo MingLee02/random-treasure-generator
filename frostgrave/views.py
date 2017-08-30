@@ -119,13 +119,13 @@ def random(request):
         table = 'Adventurers Gear'
         items = AdventurersGear.objects.order_by('?')[:int(request._post['num'])]
     elif random == 2:
-        table = 'Potions'
+        table = 'Potion'
         items = Potion.objects.order_by('?')[:int(request._post['num'])]
     elif random == 3:
-        table = 'Spells'
+        table = 'Spell'
         items = Spell.objects.order_by('?')[:int(request._post['num'])]
     elif random == 4:
-        table = 'Trinkets'
+        table = 'Trinket'
         items = Trinket.objects.order_by('?')[:int(request._post['num'])]
     elif random == 5:
         table = 'Weapons & Armour'
@@ -136,7 +136,8 @@ def random(request):
 
     return render(request, 'frostgrave/main.html', {
         'items': items,
-        'table': table
+        'table': table,
+        'count': random,
     })
 
 
