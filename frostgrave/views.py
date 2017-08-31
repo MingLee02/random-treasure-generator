@@ -119,13 +119,13 @@ def random(request):
         table = 'Adventurers Gear'
         items = AdventurersGear.objects.order_by('?')[:int(request._post['num'])]
     elif random == 2:
-        table = 'Potion'
+        table = 'Potions'
         items = Potion.objects.order_by('?')[:int(request._post['num'])]
     elif random == 3:
-        table = 'Spell'
+        table = 'Spells'
         items = Spell.objects.order_by('?')[:int(request._post['num'])]
     elif random == 4:
-        table = 'Trinket'
+        table = 'Trinkets'
         items = Trinket.objects.order_by('?')[:int(request._post['num'])]
     elif random == 5:
         table = 'Weapons & Armour'
