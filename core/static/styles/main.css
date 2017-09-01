@@ -183,3 +183,21 @@ label {
 .school {
     text-decoration: underline;
 }
+
+.random-detail {
+    text-decoration: none;
+    width: 100%;
+    color: black;
+    padding: 20px;
+}
+
+.list-group-item a:hover {
+    width: 100%;
+    color: black !important;
+    text-decoration: none !important;
+    background: #E8E8E8;
+}
+
+.treasure {
+    padding: 0 !important;
+}

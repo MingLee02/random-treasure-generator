@@ -118,16 +118,31 @@ def random(request):
         random = randint(1, 5)
 
         if random == 1:
-            treasure.append(AdventurersGear.objects.order_by('?')[:1].first())
+            treasure.append({
+                'data': AdventurersGear.objects.order_by('?')[:1].first(),
+                'page': 'adventurers-gear',
+            })
         elif random == 2:
-            treasure.append(Potion.objects.order_by('?')[:1].first())
+            treasure.append({
+               'data': Potion.objects.order_by('?')[:1].first(),
+               'page': 'potions',
+            })
         elif random == 3:
-            treasure.append(Spell.objects.order_by('?')[:1].first())
+            treasure.append({
+                'data': Spell.objects.order_by('?')[:1].first(),
+                'page': 'spells',
+            })
         elif random == 4:
-            treasure.append(Trinket.objects.order_by('?')[:1].first())
+            treasure.append({
+                'data': Trinket.objects.order_by('?')[:1].first(),
+                'page': 'trinkets',
+            })
         elif random == 5:
             equip = EquipmentType.objects.order_by('?')[:1].first()
-            treasure.append(get_equipment(equip))
+            treasure.append({
+                'data': get_equipment(equip),
+                'page': 'equipment',
+            })
 
     return render(request, 'frostgrave/main.html', {
         'treasures': treasure,
