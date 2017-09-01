@@ -76,7 +76,7 @@ def get_equipment(equip):
     random = []
     items = Equipment.objects.filter(item_type=equip)
     for item in items:
-        for num in  range(0, int(float(item.weight))):
+        for num in range(0, int(float(item.weight))):
             random.append(item)
 
     return choice(random)
@@ -113,30 +113,24 @@ def post(request):
 
 
 def random(request):
-    random = randint(1, 5)
+    treasure = []
+    for num in range(0, int(request._post['num'])):
+        random = randint(1, 5)
 
-    if random == 1:
-        table = 'Adventurers Gear'
-        items = AdventurersGear.objects.order_by('?')[:int(request._post['num'])]
-    elif random == 2:
-        table = 'Potions'
-        items = Potion.objects.order_by('?')[:int(request._post['num'])]
-    elif random == 3:
-        table = 'Spells'
-        items = Spell.objects.order_by('?')[:int(request._post['num'])]
-    elif random == 4:
-        table = 'Trinkets'
-        items = Trinket.objects.order_by('?')[:int(request._post['num'])]
-    elif random == 5:
-        table = 'Weapons & Armour'
-        items = []
-        for num in range(0, int(request._post['num'])):
+        if random == 1:
+            treasure.append(AdventurersGear.objects.order_by('?')[:1].first())
+        elif random == 2:
+            treasure.append(Potion.objects.order_by('?')[:1].first())
+        elif random == 3:
+            treasure.append(Spell.objects.order_by('?')[:1].first())
+        elif random == 4:
+            treasure.append(Trinket.objects.order_by('?')[:1].first())
+        elif random == 5:
             equip = EquipmentType.objects.order_by('?')[:1].first()
-            items.append(get_equipment(equip))
+            treasure.append(get_equipment(equip))
 
     return render(request, 'frostgrave/main.html', {
-        'items': items,
-        'table': table,
+        'treasures': treasure,
         'count': random,
     })
 
