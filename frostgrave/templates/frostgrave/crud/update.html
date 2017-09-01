@@ -11,6 +11,6 @@
         {% with item_detail=items %} 
             <a href="{% url 'item' item_detail=item_detail pk=object.pk %}">Cancel</a>
         {% endwith %} 
-        <input type="submit" value="Update" />
+        <input type="submit" value="Update" class="btn btn-primary"/>
     </form>
 {% endblock %}
