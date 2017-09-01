@@ -29,20 +29,30 @@
         <input type="submit" name="submit" value="Random" class="btn btn-primary" />
     </form>
 
-    <div class='treasure-wrapper'>
-        {% if table %}
-            <h2 class="table-header">{{ table }}</h2>
-            {% if table == 'Spells' %}
-                {% include "frostgrave/tables/spells.html" %}
-            {% elif table == 'Weapons & Armour' %}
-                <ul class="list-group">
-                    {% for item in items %}
-                        <li class="list-group-item">{{ item }}</li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                {% include "frostgrave/tables/gear.html" %}
-            {% endif %}
-        {% endif %}
-    </div>
+    {% if treasures %}
+        <div class='treasure-wrapper'>
+            <h2 class="table-header">Treasures Obtained</h2>
+            <ul class="list-group">
+                {% for treasure in treasures %}
+                    <li class="list-group-item">
+                        {% if treasure.name %}
+                            <div class='treasure-name'>{{ treasure.name }}</div>
+                        {% endif %}
+                        {% if treasure.item %}
+                            <div class='treasure-name'>{{ treasure.item }}</div>
+                        {% endif %}
+                        {% if treasure.effect_description %}
+                            <div class='treasure-effect'><div class='effect'>Effects:</div> {{ treasure.effect_description }}</div>
+                        {% endif %}
+                        {% if treasure.school %}
+                            <div class='treasure-school'><div class='school'>School of magic</div>{{ treasure.school }}</div>
+                        {% endif %}
+                        {% if treasure.target %}
+                            <div class='treasure-effect'><div class='effect'>Spell target: </div>{{ treasure.target }}</div>
+                        {% endif %}  
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
 {% endblock %}

@@ -161,3 +161,25 @@ label {
     float: left;
     font-weight: bold;
 }
+
+.treasure-name {
+    font-weight: bold;
+    width: 100%;
+    text-align: center;
+}
+
+.treasure-effects {
+    width: 100%;
+}
+
+.effect {
+    text-decoration: underline;
+}
+
+.treasure-school {
+    width: 100%;
+}
+
+.school {
+    text-decoration: underline;
+}
