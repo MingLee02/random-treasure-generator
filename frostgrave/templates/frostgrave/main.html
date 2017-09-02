@@ -35,7 +35,7 @@
             <ul class="list-group">
                 {% for treasure in treasures %}
                     <li class="list-group-item treasure">
-                        <a class='random-detail' href="{% url 'item' item_detail=treasure.page pk=treasure.data.pk %}">
+                        <a class='random-detail' target="_blank" href="{% url 'item' item_detail=treasure.page pk=treasure.data.pk %}">
                             {% if treasure.data.name %}
                                 <div class='treasure-name'>{{ treasure.data.name }}</div>
                             {% endif %}
