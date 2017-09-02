@@ -34,22 +34,24 @@
             <h2 class="table-header">Treasures Obtained</h2>
             <ul class="list-group">
                 {% for treasure in treasures %}
-                    <li class="list-group-item">
-                        {% if treasure.name %}
-                            <div class='treasure-name'>{{ treasure.name }}</div>
-                        {% endif %}
-                        {% if treasure.item %}
-                            <div class='treasure-name'>{{ treasure.item }}</div>
-                        {% endif %}
-                        {% if treasure.effect_description %}
-                            <div class='treasure-effect'><div class='effect'>Effects:</div> {{ treasure.effect_description }}</div>
-                        {% endif %}
-                        {% if treasure.school %}
-                            <div class='treasure-school'><div class='school'>School of magic</div>{{ treasure.school }}</div>
-                        {% endif %}
-                        {% if treasure.target %}
-                            <div class='treasure-effect'><div class='effect'>Spell target: </div>{{ treasure.target }}</div>
-                        {% endif %}  
+                    <li class="list-group-item treasure">
+                        <a class='random-detail' target="_blank" href="{% url 'item' item_detail=treasure.page pk=treasure.data.pk %}">
+                            {% if treasure.data.name %}
+                                <div class='treasure-name'>{{ treasure.data.name }}</div>
+                            {% endif %}
+                            {% if treasure.data.item %}
+                                <div class='treasure-name'>{{ treasure.data.item }}</div>
+                            {% endif %}
+                            {% if treasure.data.effect_description %}
+                                <div class='treasure-effect'><div class='effect'>Effects:</div> {{ treasure.data.effect_description }}</div>
+                            {% endif %}
+                            {% if treasure.data.school %}
+                                <div class='treasure-school'><div class='school'>School of magic</div>{{ treasure.data.school }}</div>
+                            {% endif %}
+                            {% if treasure.data.target %}
+                                <div class='treasure-effect'><div class='effect'>Spell target: </div>{{ treasure.data.target }}</div>
+                            {% endif %}  
+                        </a>
                     </li>
                 {% endfor %}
             </ul>
