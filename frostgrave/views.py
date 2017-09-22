@@ -100,22 +100,33 @@ def post(request):
 
 def random(request):
     treasure = []
-    for num in range(0, int(request._post['num'])):
-        random = randint(1, 5)
+    rarity = [
+        'common', 'common', 'common', 'common', 'common',
+        'uncommon', 'uncommon', 'uncommon',
+        'rare', 'rare'
+    ]
 
+    for num in range(0, int(request._post['num'])):
+        random = randint(1, 4)
         if random == 1:
+            rare = choice(rarity)
+            rare = rare.upper()
             treasure.append({
-                'data': Equipment.objects.order_by('?')[:1].first(),
+                'data': Equipment.objects.filter(rarity=rare).order_by('?')[:1].first(),
                 'page': 'equipment',
             })
         elif random == 2:
+            rare = choice(rarity)
+            rare = rare.upper()
             treasure.append({
-               'data': Grimoire.objects.order_by('?')[:1].first(),
+               'data': Grimoire.objects.filter(rarity=rare).order_by('?')[:1].first(),
                'page': 'grimoire',
             })
         elif random == 3:
+            rare = choice(rarity)
+            rare = rare.upper()
             treasure.append({
-                'data': Scroll.objects.order_by('?')[:1].first(),
+                'data': Scroll.objects.filter(rarity=rare).order_by('?')[:1].first(),
                 'page': 'scroll',
             })
         elif random == 4:
