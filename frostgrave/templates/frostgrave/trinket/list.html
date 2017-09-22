@@ -6,7 +6,7 @@
 {% block content %}
     <h1>Trinkets</h1>
     <div class="crud-wrapper">
-    	<a href="{% url 'create_item' item_create='trinkets' %}">Add Trinket</a>
+    	<a href="{% url 'create_item' item_create='trinket' %}">Add Trinket</a>
     </div>
-    {% include "frostgrave/tables/gear.html" with items=object_list item_detail='trinkets' %} 
+    {% include "frostgrave/tables/trinket.html" with items=object_list item_detail='trinket' %} 
 {% endblock %}

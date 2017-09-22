@@ -3,15 +3,19 @@
 {% load static %}
 
 {% block content %}
-    <h1>{{ object.item }}</h1>
+    <h1>{{ object.name }}</h1>
     <div class="crud-wrapper">
         <a href="{% url 'edit_item' item_edit='equipment' pk=object.pk %}">Update</a>
         <a href="{% url 'delete_item' item_delete='equipment' pk=object.pk %}">Delete</a>
     </div>
     <div class='treasure-wrapper'>
         <ul class="list-group">
-            <li class="list-group-item">Weight: {{ object.weight }}</li>
-            <li class="list-group-item">Type: {{ object.item_type }}</li>
+            <li class="list-group-item">Rarity: {{ object.rarity }}</li>
+            <li class="list-group-item">Type: {{ object.equip_type }}</li>
+            <li class="list-group-item">Description: {{ object.description }}</li>
+            <li class="list-group-item">Effect: {{ object.effect }}</li>
+            <li class="list-group-item">Use: {{ object.use }}</li>
+            <li class="list-group-item">Cost: {{ object.cost }}</li>
         </ul>
-    </div>
+	</div>
 {% endblock %}

@@ -1,0 +1,25 @@
+{% extends "core/base.html" %}
+
+{% load static %}
+
+{% block content %}
+    <h1>{{ object.name }}</h1>
+    <div class="crud-wrapper">
+        <a href="{% url 'edit_item' item_edit='grimoire' pk=object.pk %}">Update</a>
+        <a href="{% url 'delete_item' item_delete='grimoire' pk=object.pk %}">Delete</a>
+    </div>
+    <div class='treasure-wrapper'>
+        <ul class="list-group">
+            <li class="list-group-item">Rarity: {{ object.rarity }}</li>
+            <li class="list-group-item">School: {{ object.school }}</li>
+            <li class="list-group-item">Mana: {{ object.cost }}</li>
+            <li class="list-group-item">Target: {{ object.target }}</li>
+            <li class="list-group-item">School: {{ object.school }}</li>
+            <li class="list-group-item">Range: {{ object.scroll_range }}</li>
+            <li class="list-group-item">Effect: {{ object.effect }}</li>
+            <li class="list-group-item">Duration: {{ object.duration }}</li>
+            <li class="list-group-item">Defence: {{ object.defence }}</li>
+            <li class="list-group-item">Value: {{ object.value }}</li>
+        </ul>
+	</div>
+{% endblock %}

@@ -10,76 +10,70 @@ from django.urls import reverse
 
 from django.utils.datastructures import MultiValueDict
 
-from .models import AdventurersGear, Equipment, EquipmentType, Potion, Spell, Trinket
+from .models import Equipment, Grimoire, Scroll, Trinket
+
+
+@transaction.atomic
+def create_equipment(values):
+    for value in values:
+        if len(value[0]) > 0:
+            Equipment.objects.update_or_create(
+                rarity=value[0],
+                equip_type=value[1],
+                name=value[2],
+                description=value[3],
+                effect=value[4],
+                use=value[5],
+                cost=value[6],
+            )
+
+@transaction.atomic
+def create_grimoires(values):
+    for value in values:
+        if len(value[0]) > 0:
+            Grimoire.objects.update_or_create(
+                rarity=value[0],
+                school=value[1],
+                name=value[2],
+                cost=value[3],
+                target=value[4],
+                grimoire_range=value[5],
+                effect=value[6],
+                duration=value[7],
+                defence=value[8],
+                value=value[9]
+            )
+
+@transaction.atomic
+def create_scrolls(values):
+    for value in values:
+        if len(value[0]) > 0:
+            Scroll.objects.update_or_create(
+                rarity=value[0],
+                school=value[1],
+                name=value[2],
+                cost=value[3],
+                target=value[4],
+                scroll_range=value[5],
+                effect=value[6],
+                duration=value[7],
+                defence=value[8],
+                value=value[9]
+            )
 
 @transaction.atomic
 def create_trinkets(values):
     for value in values:
-        Trinket.objects.update_or_create(
-            visual_description=value[0],
-            name=value[1],
-            effect_description=value[2],
-            uses=value[3],
-            school_magic=value[4],
-            cost=value[5]
-        )
-
-@transaction.atomic
-def create_potions(values):
-    for value in values:
-        Potion.objects.update_or_create(
-            visual_description=value[0],
-            name=value[1],
-            effect_description=value[2],
-            uses=value[3],
-            cost=value[4]
-        )
-
-@transaction.atomic
-def create_gear(values):
-    for value in values:
-        AdventurersGear.objects.update_or_create(
-            visual_description=value[0],
-            name=value[1],
-            effect_description=value[2],
-            uses=value[3],
-            cost=value[4]
-        )
-
-@transaction.atomic
-def create_spells(values):
-    for value in values:
-        Spell.objects.update_or_create(
-            school=value[0],
-            name=value[1],
-            cost=value[2],
-            target=value[3],
-            book_ammends=value[4]
-        )
-
-@transaction.atomic
-def create_equipment(weights, values):
-    for value in values:
-        counter = 0
-        for item in value:
-            if counter == 0:
-                e_type = EquipmentType.objects.update_or_create(item_type=item)
-
-            Equipment.objects.update_or_create(
-                weight=weights[counter],
-                item_type=e_type[0],
-                item=item
+        if len(value[0]) > 0:
+            Trinket.objects.update_or_create(
+                rarity=value[0],
+                description=value[1],
+                name=value[2],
+                effect=value[3],
+                use=value[4],
+                school=value[5],
+                cost=value[6]
             )
-            counter = counter + 1
-
-def get_equipment(equip):
-    random = []
-    items = Equipment.objects.filter(item_type=equip)
-    for item in items:
-        for num in range(0, int(float(item.weight))):
-            random.append(item)
-
-    return choice(random)
 
 def post(request):
     if request.method == "POST":
@@ -91,26 +85,18 @@ def post(request):
 
             for name in wb.sheet_names():
                 sheet = wb.sheet_by_name(name)
+                values = [sheet.row_values(i) for i in range(1, sheet.nrows)]
 
-                if name == 'Weapons & Armour':
-                    values = [sheet.col_values(i) for i in range(1, sheet.ncols)]
-                    weight = sheet.col_values(0)
-                    create_equipment(weight, values)
-                else:
-                    # read the rest rows for values
-                    values = [sheet.row_values(i) for i in range(1, sheet.nrows)]
-
-                    if name == 'Magical Trinkets':
-                        create_trinkets(values)
-                    elif name == 'Potions':
-                        create_potions(values)
-                    elif name == 'Adventurers Gear':
-                        create_gear(values)
-                    elif name == 'Spells':
-                        create_spells(values)
+                if name == 'Trinkets':
+                    create_trinkets(values)
+                elif name == 'Scrolls':
+                    create_scrolls(values)
+                elif name == 'Grimoires':
+                    create_grimoires(values)
+                elif name == 'Equipment':
+                    create_equipment(values)
           
     return render(request, 'frostgrave/main.html')
-
 
 def random(request):
     treasure = []
@@ -119,29 +105,23 @@ def random(request):
 
         if random == 1:
             treasure.append({
-                'data': AdventurersGear.objects.order_by('?')[:1].first(),
-                'page': 'adventurers-gear',
+                'data': Equipment.objects.order_by('?')[:1].first(),
+                'page': 'equipment',
             })
         elif random == 2:
             treasure.append({
-               'data': Potion.objects.order_by('?')[:1].first(),
-               'page': 'potions',
+               'data': Grimoire.objects.order_by('?')[:1].first(),
+               'page': 'grimoire',
             })
         elif random == 3:
             treasure.append({
-                'data': Spell.objects.order_by('?')[:1].first(),
-                'page': 'spells',
+                'data': Scroll.objects.order_by('?')[:1].first(),
+                'page': 'scroll',
             })
         elif random == 4:
             treasure.append({
                 'data': Trinket.objects.order_by('?')[:1].first(),
-                'page': 'trinkets',
-            })
-        elif random == 5:
-            equip = EquipmentType.objects.order_by('?')[:1].first()
-            treasure.append({
-                'data': get_equipment(equip),
-                'page': 'equipment',
+                'page': 'trinket',
             })
 
     return render(request, 'frostgrave/main.html', {
@@ -155,28 +135,22 @@ class MainView(TemplateView):
 
 item_dict = [
     {
-        'name': 'trinkets',
+        'name': 'trinket',
         'model': Trinket,
         'list-template': 'frostgrave/trinket/list.html',
         'template': 'frostgrave/trinket/detail.html'
     },
     {   
-        'name': 'potions',
-        'model': Potion,
-        'list-template': 'frostgrave/potion/list.html',
-        'template': 'frostgrave/potion/detail.html'
+        'name': 'scroll',
+        'model': Scroll,
+        'list-template': 'frostgrave/scroll/list.html',
+        'template': 'frostgrave/scroll/detail.html'
     },
     {   
-        'name': 'adventurers-gear',
-        'model': AdventurersGear,
-        'list-template': 'frostgrave/adventurersgear/list.html',
-        'template': 'frostgrave/adventurersgear/detail.html'
-    },
-    {   
-        'name': 'spells',
-        'model': Spell,
-        'list-template': 'frostgrave/spell/list.html',
-        'template': 'frostgrave/spell/detail.html'
+        'name': 'grimoire',
+        'model': Grimoire,
+        'list-template': 'frostgrave/grimoire/list.html',
+        'template': 'frostgrave/grimoire/detail.html'
     },
     {   
         'name': 'equipment',
