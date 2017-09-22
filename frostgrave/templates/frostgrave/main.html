@@ -42,8 +42,12 @@
                             {% if treasure.data.item %}
                                 <div class='treasure-name'>{{ treasure.data.item }}</div>
                             {% endif %}
-                            {% if treasure.data.effect_description %}
-                                <div class='treasure-effect'><div class='effect'>Effects:</div> {{ treasure.data.effect_description }}</div>
+                            <div class='treasure-effect'><div class='effect'>Rarity:</div> {{ treasure.data.rarity }}</div>
+                            {% if treasure.data.description %}
+                                <div class='treasure-effect'><div class='effect'>Description:</div> {{ treasure.data.description }}</div>
+                            {% endif %}
+                            {% if treasure.data.effect %}
+                                <div class='treasure-effect'><div class='effect'>Effect:</div> {{ treasure.data.effect }}</div>
                             {% endif %}
                             {% if treasure.data.school %}
                                 <div class='treasure-school'><div class='school'>School of magic</div>{{ treasure.data.school }}</div>
