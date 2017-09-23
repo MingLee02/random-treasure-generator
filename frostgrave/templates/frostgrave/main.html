@@ -35,27 +35,46 @@
             <ul class="list-group">
                 {% for treasure in treasures %}
                     <li class="list-group-item treasure">
-                        <a class='random-detail' target="_blank" href="{% url 'item' item_detail=treasure.page pk=treasure.data.pk %}">
+                        <div class='random-detail'>
                             {% if treasure.data.name %}
                                 <div class='treasure-name'>{{ treasure.data.name }}</div>
                             {% endif %}
-                            {% if treasure.data.item %}
-                                <div class='treasure-name'>{{ treasure.data.item }}</div>
-                            {% endif %}
-                            <div class='treasure-effect'><div class='effect'>Rarity:</div> {{ treasure.data.rarity }}</div>
+                            <div class='treasure-effect'><strong class='effect'>Type:</strong> {{ treasure.page|title }}</div>
+                            <div class='treasure-effect'><strong class='effect'>Rarity:</strong> {{ treasure.data.rarity|title }}</div>
                             {% if treasure.data.description %}
-                                <div class='treasure-effect'><div class='effect'>Description:</div> {{ treasure.data.description }}</div>
+                                <div class='treasure-effect'><strong class='effect'>Description:</strong> {{ treasure.data.description }}</div>
                             {% endif %}
                             {% if treasure.data.effect %}
-                                <div class='treasure-effect'><div class='effect'>Effect:</div> {{ treasure.data.effect }}</div>
+                                <div class='treasure-effect'><strong class='effect'>Effect:</strong> {{ treasure.data.effect }}</div>
                             {% endif %}
                             {% if treasure.data.school %}
-                                <div class='treasure-school'><div class='school'>School of magic</div>{{ treasure.data.school }}</div>
+                                <div class='treasure-school'><strong class='school'>School:</strong> {{ treasure.data.school }}</div>
                             {% endif %}
                             {% if treasure.data.target %}
-                                <div class='treasure-effect'><div class='effect'>Spell target: </div>{{ treasure.data.target }}</div>
+                                <div class='treasure-effect'><strong class='effect'>Spell target:</strong> {{ treasure.data.target }}</div>
+                            {% endif %}
+                            {% if treasure.data.use %}
+                                <div class='treasure-effect'><strong class='effect'>Use:</strong> {{ treasure.data.use }}</div>
+                            {% endif %}
+                            {% if treasure.data.cost %}
+                                <div class='treasure-effect'><strong class='effect'>Cost:</strong> {{ treasure.data.cost }}</div>
+                            {% endif %}
+                            {% if treasure.data.scroll_range %}
+                                <div class='treasure-effect'><strong class='effect'>Range:</strong> {{ treasure.data.scroll_range }}</div>
+                            {% endif %}
+                            {% if treasure.data.grimoire_range %}
+                                <div class='treasure-effect'><strong class='effect'>Range:</strong> {{ treasure.data.grimoire_range }}</div>
+                            {% endif %}
+                            {% if treasure.data.duration %}
+                                <div class='treasure-effect'><strong class='effect'>Duration:</strong> {{ treasure.data.duration }}</div>
+                            {% endif %} 
+                            {% if treasure.data.defence %}
+                                <div class='treasure-effect'><strong class='effect'>Defence:</strong> {{ treasure.data.defence }}</div>
+                            {% endif %}
+                             {% if treasure.data.value %}
+                                <div class='treasure-effect'><strong class='effect'>Value:</strong> {{ treasure.data.value }}</div>
                             {% endif %}  
-                        </a>
+                        </div>
                     </li>
                 {% endfor %}
             </ul>
