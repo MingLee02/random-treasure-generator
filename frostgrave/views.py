@@ -106,38 +106,50 @@ def random(request):
         'rare', 'rare'
     ]
 
+    treasure_type = [
+        'Trinkets', 'Trinkets', 'Trinkets', 'Trinkets', 'Equipment',
+        'Equipment', 'Scrolls', 'Scrolls',
+        'es', 'Grimoires'
+    ]
+
     for num in range(0, int(request._post['num'])):
-        random = randint(1, 4)
-        if random == 1:
+        random = choice(treasure_type)
+        if random == 'es':
+            breaker = randint(1, 2)
+            if breaker == 1:
+                random = 'Equipment'
+            else:
+                random = 'Scrolls'
+
+        if random == 'Equipment':
             rare = choice(rarity)
             rare = rare.upper()
             treasure.append({
                 'data': Equipment.objects.filter(rarity=rare).order_by('?')[:1].first(),
                 'page': 'equipment',
             })
-        elif random == 2:
+        elif random == 'Grimoires':
             rare = choice(rarity)
             rare = rare.upper()
             treasure.append({
                'data': Grimoire.objects.filter(rarity=rare).order_by('?')[:1].first(),
                'page': 'grimoire',
             })
-        elif random == 3:
+        elif random == 'Scrolls':
             rare = choice(rarity)
             rare = rare.upper()
             treasure.append({
                 'data': Scroll.objects.filter(rarity=rare).order_by('?')[:1].first(),
                 'page': 'scroll',
             })
-        elif random == 4:
+        elif random == 'Trinkets':
             treasure.append({
                 'data': Trinket.objects.order_by('?')[:1].first(),
                 'page': 'trinket',
             })
 
     return render(request, 'frostgrave/main.html', {
-        'treasures': treasure,
-        'count': random,
+        'treasures': treasure
     })
 
 
