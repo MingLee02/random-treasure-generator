@@ -4,17 +4,34 @@
 
 
 {% block content %}
-    <h2>Import Treasure</h2>
-    <form action="{% url 'mass_upload' %}" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <input type="file" name="file" />
-        <input type="submit" name="submit" value="Upload" class="btn btn-primary" />
-    </form>
-
     <h2>Generate Random Treasure</h2>
     <form action="{% url 'random_treasure' %}" method="post">
         {% csrf_token %}
         <select name="num" class="custom-select">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+        </select>
+        <input type="submit" name="submit" value="Random" class="btn btn-primary" />
+    </form>
+
+    <h2>Generate random treasure from specfic list</h2>
+    <form action="{% url 'random_treasure' %}" method="post">
+        {% csrf_token %}
+        <select name="type" class="custom-select">
+            <option value="Trinket">Trinket</option>
+            <option value="Scroll">Scroll</option>
+            <option value="Equipment">Equipment</option>
+            <option value="Grimoire">Grimoire</option>
+        </select>
+        <select name="value" class="custom-select">
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>

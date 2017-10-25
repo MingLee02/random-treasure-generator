@@ -18,9 +18,17 @@
                     <li><a href="{% url 'items' item='scroll' %}">Scrolls</a></li>
                     <li><a href="{% url 'items' item='grimoire' %}">Grimoire</a></li>
                     <li><a href="{% url 'items' item='equipment' %}">Equipment</a></li>
+                    <li><a href="{% url 'frostgrave_upload_sheet' %}">Upload</a></li>
                 </ul>
             </div>
         </nav>
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
         {% block content %}{% endblock content %}
     </body>
 </html>
