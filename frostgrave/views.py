@@ -2,16 +2,16 @@ from random import randint, choice
 import xlrd
 from xlrd import open_workbook, cellname
 
+from django.apps import apps
+from django.contrib import messages
 from django.db import transaction
 from django.views.generic import TemplateView, ListView, DetailView, UpdateView, DeleteView, CreateView
 from django.shortcuts import render
 from django.http import QueryDict
 from django.urls import reverse
-
 from django.utils.datastructures import MultiValueDict
 
 from .models import Equipment, Grimoire, Scroll, Trinket
-
 
 @transaction.atomic
 def create_equipment(values):
@@ -80,13 +80,14 @@ def post(request):
         mdict = MultiValueDict(request._files)
         qdict = QueryDict('', mutable=True)
         qdict.update(mdict)
+        item_count = 0
         if "xls" in qdict['file']._name:
             wb = xlrd.open_workbook(filename=None, file_contents=qdict['file'].read())
 
             for name in wb.sheet_names():
                 sheet = wb.sheet_by_name(name)
                 values = [sheet.row_values(i) for i in range(1, sheet.nrows)]
-
+                
                 if name == 'Trinkets':
                     create_trinkets(values)
                 elif name == 'Scrolls':
@@ -95,10 +96,23 @@ def post(request):
                     create_grimoires(values)
                 elif name == 'Equipment':
                     create_equipment(values)
-          
+
+    messages.success(request, 'Spreadsheet Processed')
     return render(request, 'frostgrave/main.html')
 
 def random(request):
+    try:
+        non_specific = request._post['num']
+    except KeyError:
+        non_specific = None
+
+    if non_specific is None:
+        try:
+            specfic =  request._post['type']
+            value = request._post['value']
+        except KeyError:
+            return
+
     treasure = []
     rarity = [
         'common', 'common', 'common', 'common', 'common',
@@ -107,50 +121,63 @@ def random(request):
     ]
 
     treasure_type = [
-        'Trinkets', 'Trinkets', 'Trinkets', 'Trinkets', 'Equipment',
-        'Equipment', 'Scrolls', 'Scrolls',
-        'es', 'Grimoires'
+        'Trinket', 'Trinket', 'Trinket', 'Trinket', 'Trinket',
+        'Equipment', 'Scroll', 'Scroll',
+        'es', 'Grimoire'
     ]
 
-    for num in range(0, int(request._post['num'])):
-        random = choice(treasure_type)
-        if random == 'es':
-            breaker = randint(1, 2)
-            if breaker == 1:
-                random = 'Equipment'
+    if non_specific:
+        for num in range(0, int(non_specific)):
+            random = choice(treasure_type)
+            if random == 'es':
+                breaker = randint(1, 2)
+                if breaker == 1:
+                    random = 'Equipment'
+                else:
+                    random = 'Scroll'
+            model = apps.get_model(app_label='frostgrave', model_name=random)
+
+            if random == 'Trinket':
+                treasure.append({
+                    'data': model.objects.order_by('?')[:1].first(),
+                    'page': 'trinket',
+                })
             else:
-                random = 'Scrolls'
+                rare = choice(rarity)
+                rare = rare.upper()
+                treasure.append({
+                    'data': model.objects.filter(rarity=rare).order_by('?')[:1].first(),
+                    'page': random,
+                })
+    else:
+        model = apps.get_model(app_label='frostgrave', model_name=specfic)
+        num = int(value)
 
-        if random == 'Equipment':
-            rare = choice(rarity)
-            rare = rare.upper()
-            treasure.append({
-                'data': Equipment.objects.filter(rarity=rare).order_by('?')[:1].first(),
-                'page': 'equipment',
-            })
-        elif random == 'Grimoires':
-            rare = choice(rarity)
-            rare = rare.upper()
-            treasure.append({
-               'data': Grimoire.objects.filter(rarity=rare).order_by('?')[:1].first(),
-               'page': 'grimoire',
-            })
-        elif random == 'Scrolls':
-            rare = choice(rarity)
-            rare = rare.upper()
-            treasure.append({
-                'data': Scroll.objects.filter(rarity=rare).order_by('?')[:1].first(),
-                'page': 'scroll',
-            })
-        elif random == 'Trinkets':
-            treasure.append({
-                'data': Trinket.objects.order_by('?')[:1].first(),
-                'page': 'trinket',
-            })
+        if specfic == 'Trinket':
+            items = model.objects.order_by('?')[:num]
 
+            for item in items:
+                treasure.append({
+                    'data': item,
+                    'page': 'trinket',
+                })
+        else:
+            rare = choice(rarity)
+            rare = rare.upper()
+            items = model.objects.filter(rarity=rare).order_by('?')[:num]
+            for item in items:
+                treasure.append({
+                    'data': item,
+                    'page': specfic,
+                })
+       
     return render(request, 'frostgrave/main.html', {
         'treasures': treasure
     })
+
+
+class UploadSheetView(TemplateView):
+    template_name = 'frostgrave/upload.html'
 
 
 class MainView(TemplateView):
