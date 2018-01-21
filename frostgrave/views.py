@@ -102,7 +102,7 @@ def post(request):
         item_count = 0
 
         if "xls" in workbook['file']._name:
-            wb = xlrd.open_workbook(filename=None, file_contents=qdict['file'].read())
+            wb = xlrd.open_workbook(filename=None, file_contents=workbook['file'].read())
             create_model_objects_from_spreadsheet(wb)
 
     messages.success(request, 'Spreadsheet Processed')
