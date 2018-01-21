@@ -75,27 +75,35 @@ def create_trinkets(values):
                 cost=value[6]
             )
 
+def open_workbook(workbook):
+    mdict = MultiValueDict(workbook)
+    qdict = QueryDict('', mutable=True)
+    qdict.update(mdict)
+    return qdict
+
+def create_model_objects_from_spreadsheet(wb):
+    for name in wb.sheet_names():
+        sheet = wb.sheet_by_name(name)
+        values = [sheet.row_values(i) for i in range(1, sheet.nrows)]
+        
+        if name == 'Trinkets':
+            create_trinkets(values)
+        elif name == 'Scrolls':
+            create_scrolls(values)
+        elif name == 'Grimoires':
+            create_grimoires(values)
+        elif name == 'Equipment':
+            create_equipment(values)
+
 def post(request):
     if request.method == "POST":
-        mdict = MultiValueDict(request._files)
-        qdict = QueryDict('', mutable=True)
-        qdict.update(mdict)
-        item_count = 0
-        if "xls" in qdict['file']._name:
-            wb = xlrd.open_workbook(filename=None, file_contents=qdict['file'].read())
 
-            for name in wb.sheet_names():
-                sheet = wb.sheet_by_name(name)
-                values = [sheet.row_values(i) for i in range(1, sheet.nrows)]
-                
-                if name == 'Trinkets':
-                    create_trinkets(values)
-                elif name == 'Scrolls':
-                    create_scrolls(values)
-                elif name == 'Grimoires':
-                    create_grimoires(values)
-                elif name == 'Equipment':
-                    create_equipment(values)
+        workbook = open_workbook(request._files)
+        item_count = 0
+
+        if "xls" in workbook['file']._name:
+            wb = xlrd.open_workbook(filename=None, file_contents=workbook['file'].read())
+            create_model_objects_from_spreadsheet(wb)
 
     messages.success(request, 'Spreadsheet Processed')
     return render(request, 'frostgrave/main.html')
