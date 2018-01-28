@@ -14,6 +14,18 @@ from .models import Equipment, Grimoire, Scroll, Trinket
 from .utils import *
 
 
+rarity = [
+    'common', 'common', 'common', 'common', 'common',
+    'uncommon', 'uncommon', 'uncommon',
+    'rare', 'rare'
+]
+
+treasure_type = [
+    'Trinket', 'Trinket', 'Trinket', 'Trinket', 'Trinket',
+    'Equipment', 'Scroll', 'Scroll',
+    'es', 'Grimoire'
+]
+
 def open_workbook(workbook):
     mdict = MultiValueDict(workbook)
     qdict = QueryDict('', mutable=True)
@@ -47,6 +59,61 @@ def post(request):
     messages.success(request, 'Spreadsheet Processed')
     return render(request, 'frostgrave/main.html')
 
+def generate_treasure_from_all_models(num):
+    treasure = []
+
+    for num in range(0, int(num)):
+        random = choice(treasure_type)
+        if random == 'es':
+            breaker = randint(1, 2)
+            if breaker == 1:
+                random = 'Equipment'
+            else:
+                random = 'Scroll'
+        model = apps.get_model(app_label='frostgrave', model_name=random)
+
+        if random == 'Trinket':
+            treasure.append({
+                'data': model.objects.order_by('?')[:1].first(),
+                'page': 'trinket',
+            })
+        else:
+            rare = choice(rarity)
+            rare = rare.upper()
+            treasure.append({
+                'data': model.objects.filter(rarity=rare).order_by('?')[:1].first(),
+                'page': random,
+            })
+
+    if treasure:
+        return treasure
+
+def generate_treasure_from_specific_model(treasure_type, amount):
+    model = apps.get_model(app_label='frostgrave', model_name=treasure_type)
+    num = int(amount)
+    treasure = []
+
+    if treasure_type == 'Trinket':
+        items = model.objects.order_by('?')[:num]
+
+        for item in items:
+            treasure.append({
+                'data': item,
+                'page': 'trinket',
+            })
+    else:
+        rare = choice(rarity)
+        rare = rare.upper()
+        items = model.objects.filter(rarity=rare).order_by('?')[:num]
+        for item in items:
+            treasure.append({
+                'data': item,
+                'page': treasure_type,
+            })
+
+    if treasure:
+        return treasure
+
 def random(request):
     try:
         non_specific = request._post['num']
@@ -60,64 +127,11 @@ def random(request):
         except KeyError:
             return
 
-    treasure = []
-    rarity = [
-        'common', 'common', 'common', 'common', 'common',
-        'uncommon', 'uncommon', 'uncommon',
-        'rare', 'rare'
-    ]
-
-    treasure_type = [
-        'Trinket', 'Trinket', 'Trinket', 'Trinket', 'Trinket',
-        'Equipment', 'Scroll', 'Scroll',
-        'es', 'Grimoire'
-    ]
-
     if non_specific:
-        for num in range(0, int(non_specific)):
-            random = choice(treasure_type)
-            if random == 'es':
-                breaker = randint(1, 2)
-                if breaker == 1:
-                    random = 'Equipment'
-                else:
-                    random = 'Scroll'
-            model = apps.get_model(app_label='frostgrave', model_name=random)
-
-            if random == 'Trinket':
-                treasure.append({
-                    'data': model.objects.order_by('?')[:1].first(),
-                    'page': 'trinket',
-                })
-            else:
-                rare = choice(rarity)
-                rare = rare.upper()
-                treasure.append({
-                    'data': model.objects.filter(rarity=rare).order_by('?')[:1].first(),
-                    'page': random,
-                })
+        treasure = generate_treasure_from_all_models(non_specific)
     else:
-        model = apps.get_model(app_label='frostgrave', model_name=specfic)
-        num = int(value)
-
-        if specfic == 'Trinket':
-            items = model.objects.order_by('?')[:num]
-
-            for item in items:
-                treasure.append({
-                    'data': item,
-                    'page': 'trinket',
-                })
-        else:
-            rare = choice(rarity)
-            rare = rare.upper()
-            items = model.objects.filter(rarity=rare).order_by('?')[:num]
-            for item in items:
-                treasure.append({
-                    'data': item,
-                    'page': specfic,
-                })
-       
+        treasure = generate_treasure_from_specific_model(specfic, value)
+        
     return render(request, 'frostgrave/main.html', {
         'treasures': treasure
     })
