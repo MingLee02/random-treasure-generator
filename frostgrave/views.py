@@ -7,10 +7,9 @@ from django.views.generic import TemplateView, ListView, DetailView, UpdateView,
 from django.shortcuts import render
 from django.http import QueryDict
 from django.urls import reverse
-from django.utils.datastructures import MultiValueDict
+from django.utils.datastructures import MultiValueDictKeyError
 
-from .models import Equipment, Grimoire, Scroll, Trinket
-from .constants import RARITY, TREASURE_TYPES
+from .constants import RARITY, TREASURE_TYPES, ITEMS
 from .utils import *
 
 
@@ -26,6 +25,12 @@ def create_objects(sheet, values):
 
 def post(request):
     if request.method == "POST":
+        try:
+            workbook = pd.ExcelFile(request._files['file'])
+        except MultiValueDictKeyError:
+            messages.error(request, 'You have to actually add a excel file')
+            return render(request, 'frostgrave/upload.html')
+
         workbook = pd.ExcelFile(request._files['file'])
         sheets = (workbook.sheet_names)
 
@@ -112,38 +117,12 @@ class UploadSheetView(TemplateView):
 class MainView(TemplateView):
     template_name = 'frostgrave/main.html'
 
-item_dict = [
-    {
-        'name': 'trinket',
-        'model': Trinket,
-        'list-template': 'frostgrave/trinket/list.html',
-        'template': 'frostgrave/trinket/detail.html'
-    },
-    {
-        'name': 'scroll',
-        'model': Scroll,
-        'list-template': 'frostgrave/scroll/list.html',
-        'template': 'frostgrave/scroll/detail.html'
-    },
-    {
-        'name': 'grimoire',
-        'model': Grimoire,
-        'list-template': 'frostgrave/grimoire/list.html',
-        'template': 'frostgrave/grimoire/detail.html'
-    },
-    {
-        'name': 'equipment',
-        'model': Equipment,
-        'list-template': 'frostgrave/equipment/list.html',
-        'template': 'frostgrave/equipment/detail.html'
-    },
-]
 
 class ItemListView(ListView):
     paginate_by = 10
 
     def get_item(self):
-        return [x for x in item_dict if x['name'] == self.kwargs['item']]
+        return [x for x in ITEMS if x['name'] == self.kwargs['item']]
 
     def get_queryset(self):
         return self.get_item()[0]['model'].objects.all()
@@ -154,7 +133,7 @@ class ItemListView(ListView):
 
 class ItemView(DetailView):
     def get_item(self):
-        return [x for x in item_dict if x['name'] == self.kwargs['item_detail']]
+        return [x for x in ITEMS if x['name'] == self.kwargs['item_detail']]
 
     def get_queryset(self):
         return self.get_item()[0]['model'].objects.all()
@@ -168,7 +147,7 @@ class UpdateItemView(UpdateView):
     fields = '__all__'
 
     def get_item(self):
-        return [x for x in item_dict if x['name'] == self.kwargs['item_edit']]
+        return [x for x in ITEMS if x['name'] == self.kwargs['item_edit']]
 
     def get_queryset(self):
         return self.get_item()[0]['model'].objects.all()
