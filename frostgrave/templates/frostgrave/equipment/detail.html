@@ -5,8 +5,8 @@
 {% block content %}
     <h1>{{ object.name }}</h1>
     <div class="crud-wrapper">
-        <a href="{% url 'edit_item' item_edit='equipment' pk=object.pk %}">Update</a>
-        <a href="{% url 'delete_item' item_delete='equipment' pk=object.pk %}">Delete</a>
+        <p><a href="{% url 'edit_item' item_edit='equipment' pk=object.pk %}">Update</a></p>
+        <p><a href="{% url 'delete_item' item_delete='equipment' pk=object.pk %}">Delete</a</p>
     </div>
     <div class='treasure-wrapper'>
         <ul class="list-group">
