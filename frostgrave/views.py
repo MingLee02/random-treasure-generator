@@ -1,6 +1,7 @@
 from random import randint, choice
 import xlrd
 from xlrd import open_workbook, cellname
+import pandas as pd
 
 from django.apps import apps
 from django.contrib import messages
@@ -15,35 +16,26 @@ from .constants import RARITY, TREASURE_TYPES
 from .utils import *
 
 
-def open_workbook(workbook):
-    mdict = MultiValueDict(workbook)
-    qdict = QueryDict('', mutable=True)
-    qdict.update(mdict)
-    return qdict
-
-def create_model_objects_from_spreadsheet(wb):
-    for name in wb.sheet_names():
-        sheet = wb.sheet_by_name(name)
-        values = [sheet.row_values(i) for i in range(1, sheet.nrows)]
-
-        if name == 'Trinkets':
-            create_trinkets(values)
-        elif name == 'Scrolls':
-            create_scrolls(values)
-        elif name == 'Grimoires':
-            create_grimoires(values)
-        elif name == 'Equipment':
-            create_equipment(values)
+def create_objects(sheet, values):
+    if sheet == 'trinkets':
+        create_trinkets(values)
+    elif sheet == 'scrolls':
+        create_scrolls(values)
+    elif sheet == 'grimoires':
+        create_grimoires(values)
+    elif sheet == 'equipment':
+        create_equipment(values)
 
 def post(request):
     if request.method == "POST":
+        workbook = pd.ExcelFile(request._files['file'])
+        sheets = (workbook.sheet_names)
 
-        workbook = open_workbook(request._files)
-        item_count = 0
+        for sheet in sheets:
+            book = pd.read_excel(workbook, sheet_name=sheet)
+            values = book.to_dict('records')
 
-        if "xls" in workbook['file']._name:
-            wb = xlrd.open_workbook(filename=None, file_contents=workbook['file'].read())
-            create_model_objects_from_spreadsheet(wb)
+            create_objects(sheet.lower(), values)
 
     messages.success(request, 'Spreadsheet Processed')
     return render(request, 'frostgrave/main.html')

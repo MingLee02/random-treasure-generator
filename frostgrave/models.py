@@ -8,7 +8,7 @@ class Trinket(models.Model):
     effect = models.TextField(null=True, blank=True)
     use = models.CharField(max_length=255, null=True, blank=True)
     school = models.CharField(max_length=255, null=True, blank=True)
-    cost =  models.CharField(max_length=255, null=True, blank=True)
+    cost = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
         ordering = ['name']
@@ -28,7 +28,7 @@ class Scroll(models.Model):
     duration = models.CharField(max_length=255, null=True, blank=True)
     defence = models.CharField(max_length=255, null=True, blank=True)
     value = models.CharField(max_length=255, null=True, blank=True)
- 
+
     class Meta:
         ordering = ['name']
 
@@ -47,7 +47,7 @@ class Grimoire(models.Model):
     duration = models.CharField(max_length=255, null=True, blank=True)
     defence = models.CharField(max_length=255, null=True, blank=True)
     value = models.CharField(max_length=255, null=True, blank=True)
- 
+
     class Meta:
         ordering = ['name']
 
