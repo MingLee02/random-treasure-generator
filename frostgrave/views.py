@@ -143,6 +143,12 @@ class ItemView(DetailView):
         return self.get_item()[0]['template']
 
 
+def set_context(view, self, **kwargs):
+    context = super(view, self).get_context_data(**kwargs)
+    context['items'] = self.get_item()[0]['name']
+    return context
+
+
 class UpdateItemView(UpdateView):
     template_name = 'frostgrave/crud/update.html'
     fields = '__all__'
@@ -154,9 +160,7 @@ class UpdateItemView(UpdateView):
         return self.get_item()[0]['model'].objects.all()
 
     def get_context_data(self, **kwargs):
-        context = super(UpdateItemView, self).get_context_data(**kwargs)
-        context['items'] = self.get_item()[0]['name']
-        return context
+        return set_context(UpdateItemView, self, **kwargs)
 
     def get_success_url(self):
         return reverse('item', kwargs={
@@ -169,15 +173,13 @@ class DeleteItemView(DeleteView):
     template_name = 'frostgrave/crud/delete.html'
 
     def get_item(self):
-        return [x for x in item_dict if x['name'] == self.kwargs['item_delete']]
+        return [x for x in ITEMS if x['name'] == self.kwargs['item_delete']]
 
     def get_queryset(self):
         return self.get_item()[0]['model'].objects.all()
 
     def get_context_data(self, **kwargs):
-        context = super(DeleteItemView, self).get_context_data(**kwargs)
-        context['items'] = self.get_item()[0]['name']
-        return context
+        return set_context(DeleteItemView, self, **kwargs)
 
     def get_success_url(self):
         return reverse('items', kwargs={'item': self.get_item()[0]['name']})
@@ -188,15 +190,13 @@ class CreateItemView(CreateView):
     fields = '__all__'
 
     def get_item(self):
-        return [x for x in item_dict if x['name'] == self.kwargs['item_create']]
+        return [x for x in ITEMS if x['name'] == self.kwargs['item_create']]
 
     def get_queryset(self):
         return self.get_item()[0]['model'].objects.all()
 
     def get_context_data(self, **kwargs):
-        context = super(CreateItemView, self).get_context_data(**kwargs)
-        context['items'] = self.get_item()[0]['name']
-        return context
+        return set_context(CreateItemView, self, **kwargs)
 
     def get_success_url(self):
         return reverse('item', kwargs={
