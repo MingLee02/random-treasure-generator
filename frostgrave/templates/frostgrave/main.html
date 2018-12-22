@@ -22,7 +22,7 @@
         <input type="submit" name="submit" value="Random" class="btn btn-primary" />
     </form>
 
-    <h2>Generate random treasure from specfic list</h2>
+    <h2>Generate random treasure from specific list</h2>
     <form action="{% url 'random_treasure' %}" method="post">
         {% csrf_token %}
         <select name="type" class="custom-select">
@@ -84,13 +84,13 @@
                             {% endif %}
                             {% if treasure.data.duration %}
                                 <div class='treasure-effect'><strong class='effect'>Duration:</strong> {{ treasure.data.duration }}</div>
-                            {% endif %} 
+                            {% endif %}
                             {% if treasure.data.defence %}
                                 <div class='treasure-effect'><strong class='effect'>Defence:</strong> {{ treasure.data.defence }}</div>
                             {% endif %}
                              {% if treasure.data.value %}
                                 <div class='treasure-effect'><strong class='effect'>Value:</strong> {{ treasure.data.value }}</div>
-                            {% endif %}  
+                            {% endif %}
                         </div>
                     </li>
                 {% endfor %}
