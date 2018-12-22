@@ -1,6 +1,4 @@
 from random import randint, choice
-import xlrd
-from xlrd import open_workbook, cellname
 import pandas as pd
 
 from django.apps import apps
