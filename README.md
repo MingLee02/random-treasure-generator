@@ -8,4 +8,4 @@ Installation instructions
 
 Running the app.
 	First time - use `python manage.py migrate` this will build all the database tables.
-	`Python manage.py runserver`
+	`python manage.py runserver`
