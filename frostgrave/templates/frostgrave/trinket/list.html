@@ -8,5 +8,10 @@
     <div class="crud-wrapper">
     	<a href="{% url 'create_item' item_create='trinket' %}">Add Trinket</a>
     </div>
-    {% include "frostgrave/tables/trinket.html" with items=object_list item_detail='trinket' %}
+
+    {% if object_list %}
+        {% include "frostgrave/tables/trinket.html" with items=object_list item_detail='trinket' %}
+    {% else %}
+        <div class="empty-table">No trinket in database</div>
+    {% endif %}
 {% endblock %}

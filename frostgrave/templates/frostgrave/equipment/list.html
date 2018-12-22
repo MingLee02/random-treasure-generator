@@ -8,5 +8,10 @@
     <div class="crud-wrapper">
         <a href="{% url 'create_item' item_create='equipment' %}">Add Equipment</a>
     </div>
-     {% include "frostgrave/tables/equipment.html" with items=object_list item_detail='equipment' %}
+
+    {% if object_list %}
+        {% include "frostgrave/tables/equipment.html" with items=object_list item_detail='equipment' %}
+    {% else %}
+        <div class="empty-table">No Equipment in Database</div>
+    {% endif %}
 {% endblock %}

@@ -8,5 +8,10 @@
     <div class="crud-wrapper">
     	<a href="{% url 'create_item' item_create='scroll' %}">Add Scroll</a>
     </div>
-    {% include "frostgrave/tables/magic.html" with items=object_list item_detail='scroll' %} 
+
+    {% if object_list %}
+        {% include "frostgrave/tables/magic.html" with items=object_list item_detail='scroll' %}
+    {% else %}
+        <div class="empty-table">No scroll in database</div>
+    {% endif %}
 {% endblock %}
