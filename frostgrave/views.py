@@ -11,6 +11,7 @@ from django.urls import reverse
 from django.utils.datastructures import MultiValueDict
 
 from .models import Equipment, Grimoire, Scroll, Trinket
+from .constants import RARITY, TREASURE_TYPES
 from .utils import *
 
 
@@ -24,7 +25,7 @@ def create_model_objects_from_spreadsheet(wb):
     for name in wb.sheet_names():
         sheet = wb.sheet_by_name(name)
         values = [sheet.row_values(i) for i in range(1, sheet.nrows)]
-        
+
         if name == 'Trinkets':
             create_trinkets(values)
         elif name == 'Scrolls':
@@ -61,17 +62,8 @@ def random(request):
             return
 
     treasure = []
-    rarity = [
-        'common', 'common', 'common', 'common', 'common',
-        'uncommon', 'uncommon', 'uncommon',
-        'rare', 'rare'
-    ]
-
-    treasure_type = [
-        'Trinket', 'Trinket', 'Trinket', 'Trinket', 'Trinket',
-        'Equipment', 'Scroll', 'Scroll',
-        'es', 'Grimoire'
-    ]
+    rarity = RARITY
+    treasure_type = TREASURE_TYPES
 
     if non_specific:
         for num in range(0, int(non_specific)):
@@ -117,7 +109,7 @@ def random(request):
                     'data': item,
                     'page': specfic,
                 })
-       
+
     return render(request, 'frostgrave/main.html', {
         'treasures': treasure
     })
@@ -137,19 +129,19 @@ item_dict = [
         'list-template': 'frostgrave/trinket/list.html',
         'template': 'frostgrave/trinket/detail.html'
     },
-    {   
+    {
         'name': 'scroll',
         'model': Scroll,
         'list-template': 'frostgrave/scroll/list.html',
         'template': 'frostgrave/scroll/detail.html'
     },
-    {   
+    {
         'name': 'grimoire',
         'model': Grimoire,
         'list-template': 'frostgrave/grimoire/list.html',
         'template': 'frostgrave/grimoire/detail.html'
     },
-    {   
+    {
         'name': 'equipment',
         'model': Equipment,
         'list-template': 'frostgrave/equipment/list.html',
@@ -159,7 +151,7 @@ item_dict = [
 
 class ItemListView(ListView):
     paginate_by = 10
-    
+
     def get_item(self):
         return [x for x in item_dict if x['name'] == self.kwargs['item']]
 
