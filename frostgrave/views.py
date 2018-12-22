@@ -31,7 +31,6 @@ def post(request):
             messages.error(request, 'You have to actually add a excel file')
             return render(request, 'frostgrave/upload.html')
 
-        workbook = pd.ExcelFile(request._files['file'])
         sheets = (workbook.sheet_names)
 
         for sheet in sheets:
@@ -43,6 +42,50 @@ def post(request):
     messages.success(request, 'Spreadsheet Processed')
     return render(request, 'frostgrave/main.html')
 
+def get_treasure(quantity, treasure_type):
+    response = []
+    for num in range(0, int(quantity)):
+        random = choice(treasure_type)
+        if random == 'es':
+            breaker = randint(1, 2)
+            if breaker == 1:
+                random = 'Equipment'
+            else:
+                random = 'Scroll'
+        model = apps.get_model(app_label='frostgrave', model_name=random)
+
+        if random == 'Trinket':
+            items =  model.objects.order_by('?')[:1].first()
+        else:
+            rare = choice(RARITY).upper()
+            items = model.objects.filter(rarity=rare).order_by('?')[:1].first()
+
+        response.append({
+            'data': items,
+            'page': random,
+        })
+    return response
+
+def get_specific_treasure(specific, value):
+    response = []
+    model = apps.get_model(app_label='frostgrave', model_name=specific)
+    num = int(value)
+
+    if specific == 'Trinket':
+        items = model.objects.order_by('?')[:num]
+    else:
+        rare = choice(RARITY).upper()
+        items = model.objects.filter(rarity=rare).order_by('?')[:num]
+
+    for item in items:
+        response.append({
+            'data': item,
+            'page': 'trinket',
+        })
+
+    return response
+
+
 def random(request):
     try:
         non_specific = request._post['num']
@@ -51,59 +94,17 @@ def random(request):
 
     if non_specific is None:
         try:
-            specfic =  request._post['type']
+            specific = request._post['type']
             value = request._post['value']
         except KeyError:
             return
 
-    treasure = []
-    rarity = RARITY
     treasure_type = TREASURE_TYPES
 
     if non_specific:
-        for num in range(0, int(non_specific)):
-            random = choice(treasure_type)
-            if random == 'es':
-                breaker = randint(1, 2)
-                if breaker == 1:
-                    random = 'Equipment'
-                else:
-                    random = 'Scroll'
-            model = apps.get_model(app_label='frostgrave', model_name=random)
-
-            if random == 'Trinket':
-                treasure.append({
-                    'data': model.objects.order_by('?')[:1].first(),
-                    'page': 'trinket',
-                })
-            else:
-                rare = choice(rarity)
-                rare = rare.upper()
-                treasure.append({
-                    'data': model.objects.filter(rarity=rare).order_by('?')[:1].first(),
-                    'page': random,
-                })
+        treasure = get_treasure(non_specific, treasure_type)
     else:
-        model = apps.get_model(app_label='frostgrave', model_name=specfic)
-        num = int(value)
-
-        if specfic == 'Trinket':
-            items = model.objects.order_by('?')[:num]
-
-            for item in items:
-                treasure.append({
-                    'data': item,
-                    'page': 'trinket',
-                })
-        else:
-            rare = choice(rarity)
-            rare = rare.upper()
-            items = model.objects.filter(rarity=rare).order_by('?')[:num]
-            for item in items:
-                treasure.append({
-                    'data': item,
-                    'page': specfic,
-                })
+        treasure = get_specific_treasure(specific, value)
 
     return render(request, 'frostgrave/main.html', {
         'treasures': treasure
