@@ -3,13 +3,14 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
-from .views import MainView, UploadSheetView, post, random, ItemListView, ItemView, UpdateItemView, DeleteItemView, CreateItemView
+from .views import MainView, UploadSheetView, post, random, ItemListView, ItemView, UpdateItemView, DeleteItemView, CreateItemView, search
 
 
 urlpatterns = [
     url(r'^$', MainView.as_view(), name='frostgrave_main'),
     url(r'^upload-sheet/$', UploadSheetView.as_view(), name='frostgrave_upload_sheet'),
     url(r'^post/$', post, name='mass_upload'),
+    url(r'^search/$', search, name='search_data'),
     url(r'^random-treasure/$', random, name='random_treasure'),
     url(r'^(?P<item>[A-Z-a-z]+)/$', ItemListView.as_view(), name='items'),
     url(r'^(?P<item_detail>[A-Z-a-z]+)/(?P<pk>\d+)$', ItemView.as_view(), name='item'),

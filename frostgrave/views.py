@@ -13,6 +13,12 @@ from .constants import RARITY, TREASURE_TYPES, ITEMS
 from .utils import *
 
 
+def search(request):
+    print('123')
+    print(request.GET.get('q'))
+    1/0
+
+
 def create_objects(sheet, values):
     if sheet == 'trinkets':
         create_trinkets(values)

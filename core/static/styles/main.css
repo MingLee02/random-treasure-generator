@@ -217,3 +217,17 @@ label {
     margin-left: 100px;
     list-style-type: none;
 }
+
+.search-bar {
+    margin-left: 33%
+}
+
+.search-bar form{
+    width: 50%;
+    margin-bottom: 10px !important;
+}
+
+.search-button {
+    margin-left: 555px;
+    margin-top: -57px;
+}

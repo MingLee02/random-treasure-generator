@@ -21,6 +21,13 @@
                     <li><a href="{% url 'frostgrave_upload_sheet' %}">Upload</a></li>
                 </ul>
             </div>
+            <div class='search-bar'>
+                <form action="{% url 'search_data' %}"  method="get" accept-charset="utf-8">
+                    {% csrf_token %}
+                    <input name="q" type="text" value="{{ request.GET.q }}">
+                    <button type="submit" name="submit" class="btn search-button">Search</button>
+                </form>
+            </div>
         </nav>
         {% if messages %}
             <ul class="messages">
