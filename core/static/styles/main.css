@@ -116,8 +116,9 @@ table tr:hover td {
 }
 
 .pagination-wrapper {
-    width: 800px;
+    width: 852px;
     margin: auto;
+    margin-top: 15px;
 }
 
 .navbar {
@@ -230,4 +231,8 @@ label {
 .search-button {
     margin-left: 555px;
     margin-top: -57px;
+}
+
+.pagination-number {
+    margin-top: 8px;
 }

@@ -22,17 +22,41 @@
 </table>
 
 {% if item_detail %}
-    <div class="pagination-wrapper">
-        {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}" class="previous">&laquo;</a>
-        {% else %}
-            <a class="disabled previous"><span>&laquo;</span></a>
-        {% endif %}
-
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}" class="next">&raquo;</a>
-        {% else %}
-            <a class="disabled next"><span>&raquo;</span></a>
-        {% endif %}
+    <div class='pagination-wrapper'>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}" class="previous">&laquo;</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <div class="page-link" aria-label="Previous">
+                           <span aria-hidden="true">&laquo;</span>
+                         </div>
+                    </li>
+                {% endif %}
+                {% for i in paginator.page_range %}
+                    {% if page_obj.number == i %}
+                        <li class="page-item active pagination-number"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                    {% else %}
+                        <li class="page-item pagination-number"><a href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}"  aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <div class="page-link" aria-label="Previous">
+                           <span aria-hidden="true">&raquo;</span>
+                         </div>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
     </div>
 {% endif %}
