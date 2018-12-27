@@ -157,13 +157,13 @@ class MainView(TemplateView):
 
 
 class ItemListView(ListView):
-    paginate_by = 10
+    paginate_by = 20
 
     def get_item(self):
         return [x for x in ITEMS if x['name'] == self.kwargs['item']]
 
     def get_queryset(self):
-        return self.get_item()[0]['model'].objects.all()
+        return self.get_item()[0]['model'].objects.all().order_by('name')
 
     def get_template_names(self):
         return self.get_item()[0]['list-template']
