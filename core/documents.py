@@ -37,7 +37,7 @@ class TrinketDocument(DocType):
 class EquipmentDocument(DocType):
     class Meta:
         model = Equipment
-        fields = ['id', 'description']
+        fields = ['id', 'description', 'name', 'effect']
 
 
 # define simple search here

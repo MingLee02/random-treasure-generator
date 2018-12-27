@@ -24,10 +24,22 @@ def search(request):
             'id': result['id'],
             'description': result['description']
         }
-        if result['name']:
+        try:
             item_dict['name'] = result['name']
-        if result['effect']:
+        except KeyError:
+            pass
+
+        try:
             item_dict['effect'] = result['effect']
+        except KeyError:
+            pass
+
+        if result.meta['index'] == 'equipments':
+            item_dict['model'] = 'equipment'
+
+        if result.meta['index'] == 'trinkets':
+            item_dict['model'] = 'trinket'
+
         results_list.append(item_dict)
 
     return render(request, 'frostgrave/search-results.html', {
