@@ -30,19 +30,19 @@ equipment.settings(
 class TrinketDocument(DocType):
     class Meta:
         model = Trinket
-        fields = ['description', 'name', 'effect']
+        fields = ['id', 'description', 'name', 'effect']
 
 
 @equipment.doc_type
 class EquipmentDocument(DocType):
     class Meta:
         model = Equipment
-        fields = ['description']
+        fields = ['id', 'description']
 
 
 # define simple search here
 # Simple search function
-def search(description):
+def search_items(description):
     query = my_search.query("match", description=description)
     response = query.execute()
     return response

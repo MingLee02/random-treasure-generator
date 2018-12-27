@@ -9,14 +9,30 @@ from django.http import QueryDict
 from django.urls import reverse
 from django.utils.datastructures import MultiValueDictKeyError
 
+from core.documents import search_items
 from .constants import RARITY, TREASURE_TYPES, ITEMS
 from .utils import *
 
 
 def search(request):
-    print('123')
-    print(request.GET.get('q'))
-    1/0
+    search_term = request.GET['q']
+    results = search_items(search_term)
+    results_list = []
+
+    for result in results:
+        item_dict = {
+            'id': result['id'],
+            'description': result['description']
+        }
+        if result['name']:
+            item_dict['name'] = result['name']
+        if result['effect']:
+            item_dict['effect'] = result['effect']
+        results_list.append(item_dict)
+
+    return render(request, 'frostgrave/search-results.html', {
+        'treasures': results_list
+    })
 
 
 def create_objects(sheet, values):

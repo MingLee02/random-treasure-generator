@@ -1,0 +1,31 @@
+{% extends "core/base.html" %}
+
+{% load static %}
+
+
+{% block content %}
+    <h2>Search Results</h2>
+
+
+    {% if treasures %}
+        <div class='treasure-wrapper'>
+            <ul class="list-group">
+                {% for treasure in treasures %}
+                <li class="list-group-item treasure">
+                    <div class='random-detail'>
+                        {% if treasure.name %}
+                            <div class='treasure-name'>{{ treasure.name }}</div>
+                        {% endif %}
+                        {% if treasure.description %}
+                            <div class='treasure-effect'><strong class='effect'>Description:</strong> {{ treasure.description }}</div>
+                        {% endif %}
+                        {% if treasure.effect %}
+                            <div class='treasure-effect'><strong class='effect'>Effect:</strong> {{ treasure.effect }}</div>
+                        {% endif %}
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+{% endblock %}
