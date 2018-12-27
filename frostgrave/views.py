@@ -20,27 +20,30 @@ def search(request):
     results_list = []
 
     for result in results:
-        item_dict = {
-            'id': result['id'],
-            'description': result['description']
-        }
-        try:
-            item_dict['name'] = result['name']
-        except KeyError:
-            pass
+        for key, value in result._d_.items():
+            if type(value) == type(search_term) and search_term in value:
+                item_dict = {
+                    'id': result['id'],
+                    'description': result['description']
+                }
+                try:
+                    item_dict['name'] = result['name']
+                except KeyError:
+                    pass
 
-        try:
-            item_dict['effect'] = result['effect']
-        except KeyError:
-            pass
+                try:
+                    item_dict['effect'] = result['effect']
+                except KeyError:
+                    pass
 
-        if result.meta['index'] == 'equipments':
-            item_dict['model'] = 'equipment'
+                if result.meta['index'] == 'equipments':
+                    item_dict['model'] = 'equipment'
 
-        if result.meta['index'] == 'trinkets':
-            item_dict['model'] = 'trinket'
+                if result.meta['index'] == 'trinkets':
+                    item_dict['model'] = 'trinket'
 
-        results_list.append(item_dict)
+                if item_dict not in results_list:
+                    results_list.append(item_dict)
 
     return render(request, 'frostgrave/search-results.html', {
         'treasures': results_list

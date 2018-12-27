@@ -5,7 +5,7 @@ from elasticsearch_dsl import Search
 
 client = Elasticsearch()
 
-my_search = Search(using=client)
+my_search = Search(using=client, index=['trinkets','equipments'])
 
 from frostgrave.models import Trinket, Equipment
 
@@ -25,7 +25,6 @@ equipment.settings(
     number_of_replicas=0
 )
 
-
 @trinket.doc_type
 class TrinketDocument(DocType):
     class Meta:
@@ -43,6 +42,6 @@ class EquipmentDocument(DocType):
 # define simple search here
 # Simple search function
 def search_items(description):
-    query = my_search.query("match", description=description)
+    query = my_search.query("query_string", query=description)
     response = query.execute()
     return response
