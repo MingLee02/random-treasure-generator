@@ -87,6 +87,7 @@ def post(request):
 
         for sheet in sheets:
             book = pd.read_excel(workbook, sheet_name=sheet)
+            book = book.fillna(0)
             values = book.to_dict('records')
 
             create_objects(sheet.lower(), values)
