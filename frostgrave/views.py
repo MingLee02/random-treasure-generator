@@ -24,8 +24,14 @@ def search(request):
             if type(value) == type(search_term) and search_term in value:
                 item_dict = {
                     'id': result['id'],
-                    'description': result['description']
+                    'name': result['name']
                 }
+
+                try:
+                    item_dict['description'] = result['description']
+                except KeyError:
+                    pass
+
                 try:
                     item_dict['name'] = result['name']
                 except KeyError:
@@ -36,19 +42,28 @@ def search(request):
                 except KeyError:
                     pass
 
+                try:
+                    item_dict['school'] = result['school']
+                except KeyError:
+                    pass
+
                 if result.meta['index'] == 'equipments':
                     item_dict['model'] = 'equipment'
 
                 if result.meta['index'] == 'trinkets':
                     item_dict['model'] = 'trinket'
 
-                if item_dict not in results_list:
-                    results_list.append(item_dict)
+                if result.meta['index'] == 'scrolls':
+                    item_dict['model'] = 'scroll'
+
+                if result.meta['index'] == 'grimoires':
+                    item_dict['model'] = 'grimoire'
+
+                results_list.append(item_dict)
 
     return render(request, 'frostgrave/search-results.html', {
-        'treasures': results_list
+        'treasures': list({v['id']:v for v in results_list}.values())
     })
-
 
 def create_objects(sheet, values):
     if sheet == 'trinkets':
@@ -68,7 +83,7 @@ def post(request):
             messages.error(request, 'You have to actually add a excel file')
             return render(request, 'frostgrave/upload.html')
 
-        sheets = (workbook.sheet_names)
+        sheets = workbook.sheet_names
 
         for sheet in sheets:
             book = pd.read_excel(workbook, sheet_name=sheet)
@@ -122,7 +137,6 @@ def get_specific_treasure(specific, value):
 
     return response
 
-
 def random(request):
     try:
         non_specific = request._post['num']
@@ -147,14 +161,11 @@ def random(request):
         'treasures': treasure
     })
 
-
 class UploadSheetView(TemplateView):
     template_name = 'frostgrave/upload.html'
 
-
 class MainView(TemplateView):
     template_name = 'frostgrave/main.html'
-
 
 class ItemListView(ListView):
     paginate_by = 20
