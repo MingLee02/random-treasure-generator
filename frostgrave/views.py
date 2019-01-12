@@ -8,14 +8,76 @@ from django.shortcuts import render
 from django.http import QueryDict
 from django.urls import reverse
 from django.utils.datastructures import MultiValueDictKeyError
+from django.db.models import Q
 
 from .constants import RARITY, TREASURE_TYPES, ITEMS
 from .utils import *
+from .models import Equipment, Grimoire, Scroll, Trinket
 
+
+def build_result_set(results, type):
+    results_list = []
+
+    for result in results:
+        item_dict = {
+            'id': result.id,
+            'name': result.name
+        }
+
+        try:
+            item_dict['description'] = result.description
+        except AttributeError:
+            pass
+
+        try:
+            item_dict['effect'] = result.effect
+        except AttributeError:
+            pass
+
+        try:
+            item_dict['school'] = result.school
+        except AttributeError:
+            pass
+
+        item_dict['model'] = type
+
+        results_list.append(item_dict)
+    return results_list
 
 def search(request):
     search_term = request.GET['q']
-    results_list = []
+
+    equipment = Equipment.objects.filter(
+        Q(cost__contains=search_term) | Q(description__contains=search_term) | Q(effect__contains=search_term)
+        | Q(equip_type__contains=search_term) | Q(name__contains=search_term) | Q(rarity__contains=search_term)
+        | Q(use__contains=search_term)
+    )
+    equipment_list = build_result_set(equipment, 'equipment')
+
+    trinket = Trinket.objects.filter(
+        Q(cost__contains=search_term) | Q(description__contains=search_term) | Q(effect__contains=search_term)
+        | Q(name__contains=search_term) | Q(rarity__contains=search_term) | Q(school__contains=search_term)
+        | Q(use__contains=search_term)
+    )
+    trinket_list = build_result_set(trinket, 'trinket')
+
+    scroll = Scroll.objects.filter(
+        Q(cost__contains=search_term) | Q(defence__contains=search_term) | Q(duration__contains=search_term)
+        | Q(effect__contains=search_term) | Q(name__contains=search_term) | Q(rarity__contains=search_term)
+        | Q(school__contains=search_term) | Q(scroll_range__contains=search_term) | Q(target__contains=search_term)
+        | Q(value__contains=search_term)
+    )
+    scroll_list = build_result_set(scroll, 'scroll')
+
+    grimoire = Grimoire.objects.filter(
+        Q(cost__contains=search_term) | Q(defence__contains=search_term) | Q(duration__contains=search_term)
+        | Q(effect__contains=search_term) | Q(grimoire_range__contains=search_term) | Q(name__contains=search_term)
+        | Q(rarity__contains=search_term) | Q(school__contains=search_term) | Q(target__contains=search_term)
+        | Q(value__contains=search_term)
+    )
+    grimoire_list = build_result_set(grimoire, 'grimoire')
+
+    results_list = trinket_list + equipment_list + scroll_list + grimoire_list
 
     return render(request, 'frostgrave/search-results.html', {
         'treasures': results_list

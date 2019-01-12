@@ -23,6 +23,7 @@
                             <div class='treasure-effect'><strong class='effect'>Effect:</strong> {{ treasure.effect }}</div>
                         {% endif %}
                         {% if treasure.model %}
+                        <div class='treasure-effect'><strong class='effect'>Type:</strong> {{ treasure.model }}</div>
                             <div class='treasure-name'><a href="{% url 'item' item_detail=treasure.model pk=treasure.id %}">Details</a></div>
                         {% endif %}
                     </div>
