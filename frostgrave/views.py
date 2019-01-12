@@ -1,5 +1,4 @@
 from random import randint, choice
-import xlrd
 from xlrd import open_workbook, cellname
 
 from django.apps import apps
