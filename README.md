@@ -1,6 +1,6 @@
 # random-treasure-generator
 
-This is a python 3 project using Django 1.11.3.
+This is a python 3 project using Django 4.2.6 with python 3.10.12
 
 Installation instructions
 	Use `mkvirtualenv random-treasure -a .`  (this step is optional).
