@@ -151,33 +151,30 @@ def get_specific_treasure(specific, value):
     for item in items:
         response.append({
             'data': item,
-            'page': 'trinket',
+            'page': specific,
         })
 
     return response
 
 def random(request):
+    specific = None
     try:
-        non_specific = request._post['num']
+        specific = request._post['type']
+        value = request._post['value']
     except KeyError:
-        non_specific = None
-
-    if non_specific is None:
-        try:
-            specific = request._post['type']
-            value = request._post['value']
-        except KeyError:
-            return
+        return
 
     treasure_type = TREASURE_TYPES
 
-    if non_specific:
-        treasure = get_treasure(non_specific, treasure_type)
+    if specific == 'Random':
+        treasure = get_treasure(value, treasure_type)
     else:
         treasure = get_specific_treasure(specific, value)
 
+    print(specific)
     return render(request, 'frostgrave/main.html', {
-        'treasures': treasure
+        'treasures': treasure,
+        "option": specific.replace(" ", "")
     })
 
 class UploadSheetView(TemplateView):
